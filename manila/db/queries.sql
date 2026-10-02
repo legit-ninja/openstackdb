@@ -17,3 +17,25 @@ LEFT JOIN share_types st ON si.share_type_id = st.id AND st.deleted = 'False'
 LEFT JOIN availability_zones az ON si.availability_zone_id = az.id AND az.deleted = 'False'
 WHERE s.deleted = 'False'
 ORDER BY s.created_at;
+
+-- name: QuotaGetProjectLimits :many
+-- Manila project quota hard limits (deleted = 'False', matching other Manila queries).
+SELECT
+    project_id,
+    resource,
+    hard_limit
+FROM
+    quotas
+WHERE
+    deleted = 'False';
+
+-- name: QuotaUsageGetAll :many
+SELECT
+    project_id,
+    resource,
+    in_use,
+    reserved
+FROM
+    quota_usages
+WHERE
+    deleted = 'False';

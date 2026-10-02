@@ -42,3 +42,50 @@ FROM
     amphora
 WHERE
     status != 'DELETED';
+
+-- name: QuotaGetAll :many
+-- Per-project Octavia quota limits. NULL column means no explicit override.
+SELECT
+    project_id,
+    health_monitor,
+    listener,
+    load_balancer,
+    member,
+    pool,
+    l7policy,
+    l7rule
+FROM
+    quotas;
+
+-- name: LoadBalancerCountByProject :many
+SELECT
+    project_id,
+    COUNT(*) as count
+FROM
+    load_balancer
+WHERE
+    provisioning_status != 'DELETED'
+GROUP BY
+    project_id;
+
+-- name: PoolCountByProject :many
+SELECT
+    project_id,
+    COUNT(*) as count
+FROM
+    pool
+WHERE
+    provisioning_status != 'DELETED'
+GROUP BY
+    project_id;
+
+-- name: ListenerCountByProject :many
+SELECT
+    project_id,
+    COUNT(*) as count
+FROM
+    listener
+WHERE
+    provisioning_status != 'DELETED'
+GROUP BY
+    project_id;

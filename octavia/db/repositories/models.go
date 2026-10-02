@@ -31,6 +31,16 @@ type Amphora struct {
 	ComputeFlavor  sql.NullString
 }
 
+type Listener struct {
+	ID                 string
+	ProjectID          sql.NullString
+	Name               sql.NullString
+	Protocol           string
+	ProtocolPort       int32
+	LoadBalancerID     sql.NullString
+	ProvisioningStatus string
+}
+
 type LoadBalancer struct {
 	ProjectID          sql.NullString
 	ID                 string
@@ -68,6 +78,24 @@ type Pool struct {
 	TlsCiphers         sql.NullString
 	TlsVersions        sql.NullString
 	AlpnProtocols      sql.NullString
+}
+
+type Quota struct {
+	ProjectID          string
+	HealthMonitor      sql.NullInt32
+	Listener           sql.NullInt32
+	LoadBalancer       sql.NullInt32
+	Member             sql.NullInt32
+	Pool               sql.NullInt32
+	L7policy           sql.NullInt32
+	L7rule             sql.NullInt32
+	InUseHealthMonitor sql.NullInt32
+	InUseListener      sql.NullInt32
+	InUseLoadBalancer  sql.NullInt32
+	InUseMember        sql.NullInt32
+	InUsePool          sql.NullInt32
+	InUseL7policy      sql.NullInt32
+	InUseL7rule        sql.NullInt32
 }
 
 type Vip struct {

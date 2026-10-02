@@ -17,6 +17,30 @@ type AvailabilityZone struct {
 	Name      sql.NullString
 }
 
+type Quota struct {
+	CreatedAt sql.NullTime
+	UpdatedAt sql.NullTime
+	DeletedAt sql.NullTime
+	Deleted   sql.NullString
+	ID        int32
+	ProjectID sql.NullString
+	Resource  sql.NullString
+	HardLimit sql.NullInt32
+}
+
+type QuotaUsage struct {
+	CreatedAt    sql.NullTime
+	UpdatedAt    sql.NullTime
+	DeletedAt    sql.NullTime
+	Deleted      sql.NullString
+	ID           int32
+	ProjectID    sql.NullString
+	Resource     sql.NullString
+	InUse        sql.NullInt32
+	Reserved     sql.NullInt32
+	UntilRefresh sql.NullInt32
+}
+
 type Share struct {
 	CreatedAt                        sql.NullTime
 	UpdatedAt                        sql.NullTime

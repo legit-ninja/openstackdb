@@ -10,6 +10,94 @@ import (
 	"database/sql"
 )
 
+const QuotaGetProjectLimits = `-- name: QuotaGetProjectLimits :many
+SELECT
+    project_id,
+    resource,
+    hard_limit
+FROM
+    quotas
+WHERE
+    deleted = 'False'
+`
+
+type QuotaGetProjectLimitsRow struct {
+	ProjectID sql.NullString
+	Resource  sql.NullString
+	HardLimit sql.NullInt32
+}
+
+// Manila project quota hard limits (deleted = 'False', matching other Manila queries).
+func (q *Queries) QuotaGetProjectLimits(ctx context.Context) ([]QuotaGetProjectLimitsRow, error) {
+	rows, err := q.db.QueryContext(ctx, QuotaGetProjectLimits)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []QuotaGetProjectLimitsRow
+	for rows.Next() {
+		var i QuotaGetProjectLimitsRow
+		if err := rows.Scan(&i.ProjectID, &i.Resource, &i.HardLimit); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const QuotaUsageGetAll = `-- name: QuotaUsageGetAll :many
+SELECT
+    project_id,
+    resource,
+    in_use,
+    reserved
+FROM
+    quota_usages
+WHERE
+    deleted = 'False'
+`
+
+type QuotaUsageGetAllRow struct {
+	ProjectID sql.NullString
+	Resource  sql.NullString
+	InUse     sql.NullInt32
+	Reserved  sql.NullInt32
+}
+
+func (q *Queries) QuotaUsageGetAll(ctx context.Context) ([]QuotaUsageGetAllRow, error) {
+	rows, err := q.db.QueryContext(ctx, QuotaUsageGetAll)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []QuotaUsageGetAllRow
+	for rows.Next() {
+		var i QuotaUsageGetAllRow
+		if err := rows.Scan(
+			&i.ProjectID,
+			&i.Resource,
+			&i.InUse,
+			&i.Reserved,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const ShareGetAllWithInstances = `-- name: ShareGetAllWithInstances :many
 SELECT 
     s.id,

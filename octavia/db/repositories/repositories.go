@@ -27,3 +27,20 @@ func NewAmphoraRepository(db DBTX) *AmphoraRepository { return &AmphoraRepositor
 func (r *AmphoraRepository) GetAll(ctx context.Context) ([]AmphoraGetAllRow, error) {
 	return r.queries.AmphoraGetAll(ctx)
 }
+
+// QuotaRepository provides read operations for project quotas.
+type QuotaRepository struct{ queries *Queries }
+
+func NewQuotaRepository(db DBTX) *QuotaRepository { return &QuotaRepository{queries: New(db)} }
+func (r *QuotaRepository) GetAll(ctx context.Context) ([]QuotaGetAllRow, error) {
+	return r.queries.QuotaGetAll(ctx)
+}
+func (r *QuotaRepository) LoadBalancerCountByProject(ctx context.Context) ([]LoadBalancerCountByProjectRow, error) {
+	return r.queries.LoadBalancerCountByProject(ctx)
+}
+func (r *QuotaRepository) PoolCountByProject(ctx context.Context) ([]PoolCountByProjectRow, error) {
+	return r.queries.PoolCountByProject(ctx)
+}
+func (r *QuotaRepository) ListenerCountByProject(ctx context.Context) ([]ListenerCountByProjectRow, error) {
+	return r.queries.ListenerCountByProject(ctx)
+}
